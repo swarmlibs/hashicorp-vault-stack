@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/swarmlibs/dockerstack-schema/main/schema/dockerstack-spec.json
+
+services:
+  server:
+    image: hashicorp/vault:1.17.2
+    command: server
+    environment:
+      # Specifies the address (full URL) to advertise to other Vault servers in the cluster for
+      # client redirection to this node when in High Availability mode. (default to VAULT_CLUSTER_ADDR value)
+      # You can set either one of these values, the priority is as follows:
+      VAULT_API_ADDR:
+      VAULT_REDIRECT_ADDR:
+      VAULT_LOG_LEVEL: ${VAULT_LOG_LEVEL:-info}
+      # !!! DO NOT MODIFY ANY OF THESE VALUES BELOW !!!
+      VAULT_ADDR: http://127.0.0.1:8200
+      VAULT_ADVERTISE_ADDR: http://replica-{{.Task.Slot}}.vault-internal:8200
+      VAULT_CLUSTER_ADDR: http://replica-{{.Task.Slot}}.vault-internal:8201
+      VAULT_RAFT_NODE_ID: '{{.Node.Hostname}}'
+      VAULT_RAFT_PATH: /vault/file
+      VAULT_LOCAL_CONFIG: |
+        ui = true
+        cluster_name = "{{ index .Service.Labels "com.docker.stack.namespace" }}"
+        storage "raft" {}
+        listener "tcp" {
+          tls_disable = 1
+          address = "0.0.0.0:8200"
+          cluster_address = "0.0.0.0:8201"
+        }
+        listener "tcp" {
+          tls_disable = 1
+          address = "0.0.0.0:8282"
+          telemetry { unauthenticated_metrics_access = "true" }
+        }
+        enable_response_header_hostname = true
+        enable_response_header_raft_node_id = true
+    ports:
+      - target: 8200
+        published: 8200
+        mode: host
+        protocol: tcp
+    networks:
+      vault:
+    hostname: replica-{{.Task.Slot}}.vault-internal
+    volumes:
+      - type: volume
+        source: file
+        target: /vault/file
+      - type: volume
+        source: logs
+        target: /vault/logs
+    stop_signal: SIGTERM
+    cap_add:
+      - IPC_LOCK
+    deploy:
+      replicas: 3
+      placement:
+        max_replicas_per_node: 1
+      resources:
+        reservations:
+          memory: 128M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        order: stop-first
+        monitor: 120s
+        parallelism: 1
+        failure_action: pause
+        max_failure_ratio: 0.1
+      rollback_config:
+        order: stop-first
+        parallelism: 1
+        monitor: 120s
+        failure_action: pause
+        max_failure_ratio: 0.1
+
+volumes:
+  file:
+  logs:
+
+networks:
+  vault:
+    attachable: true
