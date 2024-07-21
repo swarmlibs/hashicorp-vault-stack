@@ -20,7 +20,7 @@ services:
       VAULT_LOCAL_CONFIG: |
         ui = true
         cluster_name = "{{ index .Service.Labels "com.docker.stack.namespace" }}"
-        storage "raft" {}
+        storage "raft" { ${VAULT_STACK_STORAGE_CONFIG} }
         listener "tcp" {
           tls_disable = 1
           address = "0.0.0.0:8200"
@@ -52,7 +52,7 @@ services:
     cap_add:
       - IPC_LOCK
     deploy:
-      replicas: 3
+      replicas: ${VAULT_STACK_REPLICAS:-3}
       placement:
         max_replicas_per_node: 1
       resources:
