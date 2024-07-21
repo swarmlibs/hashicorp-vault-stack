@@ -2,7 +2,7 @@
 
 services:
   server:
-    image: ${VAULT_STACK_IMAGE:-hashicorp/vault}:${VAULT_STACK_IMAGE_TAG:-latest}
+    image: ${DOCKER_SERVICE_VAULT_IMAGE:-hashicorp/vault}:${DOCKER_SERVICE_VAULT_IMAGE_TAG:-latest}
     command: server
     environment:
       # Specifies the address (full URL) to advertise to other Vault servers in the cluster for
@@ -20,7 +20,7 @@ services:
       VAULT_LOCAL_CONFIG: |
         ui = true
         cluster_name = "{{ index .Service.Labels "com.docker.stack.namespace" }}"
-        storage "raft" { ${VAULT_STACK_STORAGE_CONFIG} }
+        storage "raft" { ${VAULT_RAFT_STORAGE_CONFIG} }
         listener "tcp" {
           tls_disable = 1
           address = "0.0.0.0:8200"
@@ -34,7 +34,7 @@ services:
         enable_response_header_hostname = true
         enable_response_header_raft_node_id = true
     ports:
-      - target: ${VAULT_STACK_PUBLISH_PORT:-8200}
+      - target: ${DOCKER_SERVICE_VAULT_PUBLISH_PORT:-8200}
         published: 8200
         mode: host
         protocol: tcp
@@ -52,7 +52,7 @@ services:
     cap_add:
       - IPC_LOCK
     deploy:
-      replicas: ${VAULT_STACK_REPLICAS:-3}
+      replicas: ${DOCKER_SERVICE_VAULT_REPLICAS:-3}
       placement:
         max_replicas_per_node: 1
       resources:
