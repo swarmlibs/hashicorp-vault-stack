@@ -2,7 +2,7 @@
 
 services:
   server:
-    image: hashicorp/vault:1.17.2
+    image: hashicorp/vault:${VAULT_STACK_IMAGE_TAG:-latest}
     command: server
     environment:
       # Specifies the address (full URL) to advertise to other Vault servers in the cluster for
@@ -34,7 +34,7 @@ services:
         enable_response_header_hostname = true
         enable_response_header_raft_node_id = true
     ports:
-      - target: 8200
+      - target: ${VAULT_STACK_PUBLISH_PORT:-8200}
         published: 8200
         mode: host
         protocol: tcp
