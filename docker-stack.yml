@@ -2,7 +2,7 @@
 
 services:
   server:
-    image: hashicorp/vault:${VAULT_STACK_IMAGE_TAG:-latest}
+    image: ${VAULT_STACK_IMAGE:-hashicorp/vault}:${VAULT_STACK_IMAGE_TAG:-latest}
     command: server
     environment:
       # Specifies the address (full URL) to advertise to other Vault servers in the cluster for
