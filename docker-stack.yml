@@ -31,6 +31,11 @@ services:
           address = "0.0.0.0:8282"
           telemetry { unauthenticated_metrics_access = "true" }
         }
+        telemetry {
+          disable_hostname = true
+          usage_gauge_period = "10m"
+          prometheus_retention_time = "24h"
+        }
         enable_response_header_hostname = true
         enable_response_header_raft_node_id = true
     ports:
