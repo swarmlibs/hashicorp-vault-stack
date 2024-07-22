@@ -8,7 +8,7 @@ VAULT_RAFT_STORAGE_CONFIG := $(shell seq 1 $(DOCKER_SERVICE_VAULT_REPLICAS) | xa
 
 make:
 	@docker stack config -c $(DOCKER_STACK_COMPOSE_FILE)
-deploy:
+install:
 	@docker stack deploy -c $(DOCKER_STACK_COMPOSE_FILE) $(DOCKER_STACK_NAME)
-remove:
+uninstall:
 	@docker stack rm $(DOCKER_STACK_NAME)
