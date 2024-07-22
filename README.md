@@ -34,4 +34,4 @@ The following environment variables are available for the Vault service, see `.e
 - `VAULT_REDIRECT_ADDR`: If not set, the value of `VAULT_API_ADDR` is used.
 - `VAULT_LOG_LEVEL=info`
 
-You can add extra configurations to Vault using the `extraconfig.hcl` file. These are also fully documented directly on the [Vault website](https://developer.hashicorp.com/vault/docs/configuration) along with more detailed installation instructions.
+You can add extra configurations to Vault using the `extraconfig.hcl` file. These are also fully documented directly on the [Vault website](https://developer.hashicorp.com/vault/docs/configuration).
