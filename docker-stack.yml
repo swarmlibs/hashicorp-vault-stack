@@ -42,7 +42,7 @@ services:
       vault:
     hostname: replica-{{.Task.Slot}}.vault-internal
     configs:
-      - source: vault-extraconfig
+      - source: vault-server-extraconfig
         target: /vault/config/extraconfig.hcl
     volumes:
       - type: volume
@@ -94,6 +94,6 @@ volumes:
   logs:
 
 configs:
-  vault-extraconfig:
-    name: ${DOCKER_STACK_NAME:-vault}_extraconfig_${DOCKER_SERVICE_VAULT_EXTRACONFIG_VERSION:-v1}
+  vault-server-extraconfig:
+    name: ${DOCKER_STACK_NAME:-vault}_server_extraconfig_${DOCKER_SERVICE_VAULT_EXTRACONFIG_VERSION:-v1}
     file: ./extraconfig.hcl
