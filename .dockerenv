@@ -1,2 +1,8 @@
+# Docker Service variables
 DOCKER_SERVICE_VAULT_IMAGE=hashicorp/vault
 DOCKER_SERVICE_VAULT_IMAGE_TAG=1.17.2
+
+# Docker config for Vault
+# https://docs.docker.com/engine/swarm/configs/#example-rotate-a-config
+DOCKER_SERVICE_VAULT_PUBLISH_PORT=8200
+DOCKER_SERVICE_VAULT_EXTRACONFIG_VERSION=v1
