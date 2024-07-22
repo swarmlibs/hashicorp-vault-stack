@@ -4,7 +4,7 @@ DOCKER_STACK_COMPOSE_FILE := docker-stack.yml
 DOCKER_SERVICE_VAULT_REPLICAS := 3
 include .dockerenv
 include .env
-VAULT_RAFT_STORAGE_CONFIG := $(shell seq 1 $(DOCKER_SERVICE_VAULT_REPLICAS) | xargs -I {} echo "retry_join { leader_api_addr = \"http://replica-{}.vault-internal:8200\" }")
+VAULT_RAFT_STORAGE_CONFIG := $(shell seq -f "retry_join { leader_api_addr = \"http://replica-%g.vault-internal:8200\" }" -s " " ${DOCKER_SERVICE_VAULT_REPLICAS})
 
 make:
 	@docker stack config -c $(DOCKER_STACK_COMPOSE_FILE)
