@@ -55,7 +55,7 @@ services:
     cap_add:
       - IPC_LOCK
     deploy:
-      replicas: ${DOCKER_SERVICE_VAULT_REPLICAS:-3}
+      replicas: ${DOCKER_SERVICE_VAULT_REPLICAS:-1}
       placement:
         max_replicas_per_node: 1
       resources:
