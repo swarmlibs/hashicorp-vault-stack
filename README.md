@@ -16,10 +16,18 @@ To install the latest version of this stack, run the following command:
 ```bash
 gh repo clone swarmlibs/hashicorp-vault-stack
 cd hashicorp-vault-stack
+# 
+# To list available versions, run the following command:
+# git ls-remote
+# 
+# To switch to a specific version, run the following command:
+# git checkout <version>
+# 
+# To deploy the stack, run the following command:
 make deploy
 #
-# To uninstall the stack, run the following command:
-# make remove
+# To remove the stack, run the following command:
+make remove
 ```
 
 The following environment variables are available for the Docker service, see `.dockerenv` file:
