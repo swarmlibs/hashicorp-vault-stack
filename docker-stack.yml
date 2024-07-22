@@ -87,7 +87,6 @@ services:
 
 networks:
   vault:
-    attachable: true
 
 volumes:
   file:
