@@ -41,6 +41,9 @@ services:
     networks:
       vault:
     hostname: replica-{{.Task.Slot}}.vault-internal
+    configs:
+      - source: vault-extraconfig
+        target: /vault/config/extraconfig.hcl
     volumes:
       - type: volume
         source: file
@@ -82,10 +85,15 @@ services:
         failure_action: pause
         max_failure_ratio: 0.1
 
+networks:
+  vault:
+    attachable: true
+
 volumes:
   file:
   logs:
 
-networks:
-  vault:
-    attachable: true
+configs:
+  vault-extraconfig:
+    name: ${DOCKER_STACK_NAME:-vault}_extraconfig_${DOCKER_SERVICE_VAULT_EXTRACONFIG_VERSION:-v1}
+    file: ./extraconfig.hcl

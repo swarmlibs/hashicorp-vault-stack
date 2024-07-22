@@ -16,10 +16,10 @@ To install the latest version of this stack, run the following command:
 ```bash
 gh repo clone swarmlibs/hashicorp-vault-stack
 cd hashicorp-vault-stack
-make install
+make deploy
 #
 # To uninstall the stack, run the following command:
-# make uninstall
+# make remove
 ```
 
 Please see the many options supported in the `.env` file. These are also fully documented directly on the [Vault website](https://developer.hashicorp.com/vault/docs/configuration) along with more detailed installation instructions.
