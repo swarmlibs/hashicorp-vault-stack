@@ -63,6 +63,11 @@ services:
     stop_signal: SIGTERM
     cap_add:
       - IPC_LOCK
+    logging:
+      options:
+        max-size: "12m"
+        max-file: "5"
+      driver: json-file
     deploy:
       replicas: ${DOCKER_SERVICE_VAULT_REPLICAS:-1}
       placement:
@@ -98,7 +103,7 @@ volumes:
 configs:
   vault-server-docker-entrypoint-shim:
     name: ${DOCKER_STACK_NAME:-vault}_server_docker_entrypoint_shim_v1
-    file: ./hacks/docker-entrypoint-shim.sh
+    file: ./server/docker-entrypoint-shim.sh
   vault-server-extraconfig:
     name: ${DOCKER_STACK_NAME:-vault}_server_extraconfig_${DOCKER_SERVICE_VAULT_EXTRACONFIG_VERSION:-v1}
-    file: ./extraconfig.hcl
+    file: ./server/extraconfig.hcl
