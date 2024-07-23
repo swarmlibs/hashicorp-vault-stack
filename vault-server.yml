@@ -48,7 +48,7 @@ services:
       vault:
     hostname: replica-{{.Task.Slot}}.vault-internal
     configs:
-      - source: vault-server-docker-entrypoint-shim.sh
+      - source: vault-server-docker-entrypoint-shim
         target: /docker-entrypoint-shim.sh
         mode: 0555
       - source: vault-server-extraconfig
@@ -96,8 +96,8 @@ volumes:
   logs:
 
 configs:
-  vault-server-docker-entrypoint-shim.sh:
-    name: vault-server-docker-entrypoint-shim.sh-v1
+  vault-server-docker-entrypoint-shim:
+    name: ${DOCKER_STACK_NAME:-vault}_server_docker_entrypoint_shim_v1
     file: ./hacks/docker-entrypoint-shim.sh
   vault-server-extraconfig:
     name: ${DOCKER_STACK_NAME:-vault}_server_extraconfig_${DOCKER_SERVICE_VAULT_EXTRACONFIG_VERSION:-v1}
