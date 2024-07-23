@@ -39,11 +39,6 @@ services:
         enable_response_header_hostname = true
         enable_response_header_raft_node_id = true
       DOCKER_SERVICE_VAULT_REPLICAS:
-    ports:
-      - target: ${DOCKER_SERVICE_VAULT_PUBLISH_PORT:-8200}
-        published: 8200
-        mode: host
-        protocol: tcp
     networks:
       vault:
     hostname: replica-{{.Task.Slot}}.vault-internal
