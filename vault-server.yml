@@ -3,6 +3,7 @@
 services:
   server:
     image: ${DOCKER_SERVICE_VAULT_IMAGE:-hashicorp/vault}:${DOCKER_SERVICE_VAULT_IMAGE_TAG:-latest}
+    entrypoint: ["/docker-entrypoint-shim.sh"]
     command: server
     environment:
       # Specifies the address (full URL) to advertise to other Vault servers in the cluster for
@@ -20,7 +21,6 @@ services:
       VAULT_LOCAL_CONFIG: |
         ui = true
         cluster_name = "{{ index .Service.Labels "com.docker.stack.namespace" }}"
-        storage "raft" { ${VAULT_RAFT_STORAGE_CONFIG} }
         listener "tcp" {
           tls_disable = 1
           address = "0.0.0.0:8200"
@@ -38,6 +38,7 @@ services:
         }
         enable_response_header_hostname = true
         enable_response_header_raft_node_id = true
+      DOCKER_SERVICE_VAULT_REPLICAS:
     ports:
       - target: ${DOCKER_SERVICE_VAULT_PUBLISH_PORT:-8200}
         published: 8200
@@ -47,6 +48,9 @@ services:
       vault:
     hostname: replica-{{.Task.Slot}}.vault-internal
     configs:
+      - source: vault-server-docker-entrypoint-shim.sh
+        target: /docker-entrypoint-shim.sh
+        mode: 0555
       - source: vault-server-extraconfig
         target: /vault/config/extraconfig.hcl
     volumes:
@@ -92,6 +96,9 @@ volumes:
   logs:
 
 configs:
+  vault-server-docker-entrypoint-shim.sh:
+    name: vault-server-docker-entrypoint-shim.sh-v1
+    file: ./hacks/docker-entrypoint-shim.sh
   vault-server-extraconfig:
     name: ${DOCKER_STACK_NAME:-vault}_server_extraconfig_${DOCKER_SERVICE_VAULT_EXTRACONFIG_VERSION:-v1}
     file: ./extraconfig.hcl
