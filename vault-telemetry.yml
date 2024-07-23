@@ -1,5 +1,41 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/swarmlibs/dockerstack-schema/main/schema/dockerstack-spec.json
 
+x-vault-service: &vault-service
+  image: ${DOCKER_SERVICE_VAULT_IMAGE:-hashicorp/vault}:${DOCKER_SERVICE_VAULT_IMAGE_TAG:-latest}
+  stop_signal: SIGTERM
+  cap_add:
+    - IPC_LOCK
+
+x-resources: &resources
+  reservations:
+    memory: 128M
+  
+x-restart_policy: &restart_policy
+  condition: on-failure
+  delay: 5s
+  max_attempts: 3
+  window: 120s
+
+x-update_config: &update_config
+  order: stop-first
+  monitor: 120s
+  parallelism: 1
+  failure_action: pause
+  max_failure_ratio: 0.1
+
+x-rollback_config: &rollback_config
+  order: stop-first
+  parallelism: 1
+  monitor: 120s
+  failure_action: pause
+  max_failure_ratio: 0.1
+
+x-logging: &logging
+  options:
+    max-size: "12m"
+    max-file: "5"
+  driver: json-file
+
 services:
   telemetry:
     image: ${DOCKER_SERVICE_VAULT_IMAGE:-hashicorp/vault}:${DOCKER_SERVICE_VAULT_IMAGE_TAG:-latest}
@@ -13,41 +49,21 @@ services:
     stop_signal: SIGTERM
     cap_add:
       - IPC_LOCK
-    logging:
-      options:
-        max-size: "12m"
-        max-file: "5"
-      driver: json-file
+    logging: *logging
     deploy:
-      replicas: ${DOCKER_SERVICE_VAULT_REPLICAS:-1}
-      placement:
-        max_replicas_per_node: 1
       labels:
         io.prometheus.enabled: "true"
         io.prometheus.job_name: "vault"
         io.prometheus.metrics_path: "/v1/sys/metrics"
         io.prometheus.scrape_port: "8200"
         io.prometheus.param_format: "prometheus"
-      resources:
-        reservations:
-          memory: 128M
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-      update_config:
-        order: stop-first
-        monitor: 120s
-        parallelism: 1
-        failure_action: pause
-        max_failure_ratio: 0.1
-      rollback_config:
-        order: stop-first
-        parallelism: 1
-        monitor: 120s
-        failure_action: pause
-        max_failure_ratio: 0.1
+      replicas: ${DOCKER_SERVICE_VAULT_REPLICAS:-1}
+      placement:
+        max_replicas_per_node: 1
+      resources: *resources
+      restart_policy: *restart_policy
+      update_config: *update_config
+      rollback_config: *rollback_config
 
 networks: 
   # Vault server internal network
