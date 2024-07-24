@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/swarmlibs/dockerstack-schema/main/schema/dockerstack-spec.json
+
+x-vault-service: &vault-service
+  image: ${VAULT_STACK_IMAGE:-hashicorp/vault}:${VAULT_STACK_IMAGE_TAG:-latest}
+  stop_signal: SIGTERM
+  cap_add:
+    - IPC_LOCK
+
+x-deploy: &deploy
+  replicas: ${VAULT_STACK_REPLICAS:-1}
+  placement:
+    max_replicas_per_node: 1
+
+x-resources: &resources
+  reservations:
+    memory: 128M
+  
+x-restart_policy: &restart_policy
+  condition: any
+  delay: 5s
+  max_attempts: 3
+  window: 120s
+
+x-update_config: &update_config
+  order: stop-first
+  monitor: 120s
+  parallelism: 1
+  failure_action: pause
+  max_failure_ratio: 0.1
+
+x-rollback_config: &rollback_config
+  order: stop-first
+  parallelism: 1
+  monitor: 120s
+  failure_action: pause
+  max_failure_ratio: 0.1
+
+x-logging: &logging
+  options:
+    max-size: "12m"
+    max-file: "5"
+  driver: json-file
+
+services:
+
+  proxy:
+    <<: *vault-service
+    command: proxy -config=/vault/config/local.json
+    environment:
+      VAULT_LOCAL_CONFIG: |
+        log_level = "info"
+        vault {
+          address = "http://replica-{{.Task.Slot}}.vault-internal:8200"
+          retry { num_retries = 5 }
+        }
+        // An empty cache stanza still enables caching
+        cache {}
+        // An empty api_proxy stanza still enables the API proxy
+        api_proxy {}
+        listener "tcp" {
+          address = "0.0.0.0:8200"
+          tls_disable = true
+        }
+    ports:
+      - target: 8200
+        published: 8200
+        mode: host
+        protocol: tcp
+    networks:
+      vault:
+    logging: *logging
+    deploy:
+      <<: *deploy
+      resources: *resources
+      restart_policy: *restart_policy
+      update_config: *update_config
+      rollback_config: *rollback_config
+
+networks:
+  vault:

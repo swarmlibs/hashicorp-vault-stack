@@ -1,6 +1,6 @@
 .EXPORT_ALL_VARIABLES:
 DOCKER_STACK_NAME := vault
-DOCKER_STACK_COMPOSE_FILES := -c vault-server.yml
+DOCKER_STACK_COMPOSE_FILES := -c vault-server.yml -c vault-proxy.yml
 
 # Vault deployment
 VAULT_STACK_IMAGE=hashicorp/vault
