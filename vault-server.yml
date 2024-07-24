@@ -86,7 +86,7 @@ services:
       # You can set either one of these values, the priority is as follows:
       VAULT_API_ADDR:
       VAULT_REDIRECT_ADDR:
-      VAULT_LOG_LEVEL: ${VAULT_LOG_LEVEL:-info}
+      VAULT_LOG_LEVEL: ${VAULT_LOG_LEVEL:-warn}
       # !!! DO NOT MODIFY ANY OF THESE VALUES BELOW !!!
       VAULT_ADDR: http://127.0.0.1:8200
       VAULT_ADVERTISE_ADDR: http://replica-{{.Task.Slot}}.vault-internal:8200
@@ -95,6 +95,7 @@ services:
       VAULT_RAFT_PATH: /vault/file
       VAULT_LOCAL_CONFIG: |
         ui = true
+        log_requests_level = "info"
         cluster_name = "{{ index .Service.Labels "com.docker.stack.namespace" }}"
         listener "tcp" {
           tls_disable = 1
@@ -113,10 +114,6 @@ services:
         }
         enable_response_header_hostname = true
         enable_response_header_raft_node_id = true
-        # To activate request logging, set the log_requests_level configuration option in the
-        # Vault server configuration to the desired logging level.
-        # The acceptable logging levels are error, warn, info, debug, trace, and off,which is the default.
-        log_requests_level = "debug"
       VAULT_STACK_REPLICAS:
     networks:
       vault:

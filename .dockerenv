@@ -11,5 +11,5 @@ VAULT_STACK_EXTRACONFIG_VERSION=v1
 
 # Vault Configuration
 # https://developer.hashicorp.com/vault/docs/configuration
-VAULT_LOG_LEVEL=info
-VAULT_API_ADDR=http://replica-{{.Task.Slot}}.vault-internal:8200
+# VAULT_LOG_LEVEL=warn
+# VAULT_API_ADDR=http://replica-{{.Task.Slot}}.vault-internal:8200
