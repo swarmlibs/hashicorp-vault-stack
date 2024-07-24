@@ -38,7 +38,7 @@ x-logging: &logging
 
 services:
   telemetry:
-    <<: vault-service
+    <<: *vault-service
     command: proxy -config=/vault/config/vault-telemetry.hcl
     networks:
       vault:
