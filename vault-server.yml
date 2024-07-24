@@ -16,7 +16,7 @@ x-resources: &resources
     memory: 128M
   
 x-restart_policy: &restart_policy
-  condition: on-failure
+  condition: any
   delay: 5s
   max_attempts: 3
   window: 120s
