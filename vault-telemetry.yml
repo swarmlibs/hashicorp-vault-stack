@@ -39,13 +39,26 @@ x-logging: &logging
 services:
   telemetry:
     <<: *vault-service
-    command: proxy -config=/vault/config/vault-telemetry.hcl
+    command: proxy -config=/vault/config/local.json
+    environment:
+      VAULT_LOCAL_CONFIG: |
+        log_level = "info"
+        vault {
+          address = "http://replica-{{.Task.Slot}}.vault-internal:8282"
+          retry {
+            num_retries = 5
+          }
+        }
+        api_proxy {
+          // An empty api_proxy stanza still enables the API proxy
+        }
+        listener "tcp" {
+          address = "0.0.0.0:8282"
+          tls_disable = true
+        }
     networks:
       vault:
       prometheus:
-    configs:
-      - source: vault-telemetry-config
-        target: /vault/config/vault-telemetry.hcl
     logging: *logging
     deploy:
       labels:
@@ -70,9 +83,3 @@ networks:
   prometheus:
     name: prometheus
     external: true
-
-configs:
-  vault-telemetry-config:
-    name: vault_telemetry_config_v1
-    file: ./telemetry/telemetry-config.hcl
-    template_driver: golang
