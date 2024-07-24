@@ -25,10 +25,23 @@ cd hashicorp-vault-stack
 # 
 # To deploy the stack, run the following command:
 make deploy
-#
-# To remove the stack, run the following command:
+```
+
+To remove the stack, run the following command:
+
+```bash
 make remove
 ```
+
+> [!IMPORTANT]
+> The `make remove` command will remove the stack from the Docker Swarm cluster.
+> It is a destructive operation and may lead to cluster instability if not used correctly.
+>
+> Due to the nature of Docker Swarm once the stack is removed,
+> re-deploying the stack may cause the service to be created on a different node from the previous deployment.
+>
+> To avoid this, please prepare the `vaule-server.yml` file with the correct node placement constraints before re-deploying the stack.
+> For more information, see the [Docker documentation](https://docs.docker.com/engine/swarm/services/#placement-constraints).
 
 The following environment variables are available for the Docker service, see `.dockerenv` file:
 - `VAULT_STACK_IMAGE=hashicorp/vault`
