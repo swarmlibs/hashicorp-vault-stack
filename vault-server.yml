@@ -95,7 +95,6 @@ services:
       VAULT_RAFT_PATH: /vault/file
       VAULT_LOCAL_CONFIG: |
         ui = true
-        log_requests_level = "warn"
         cluster_name = "{{ index .Service.Labels "com.docker.stack.namespace" }}"
         listener "tcp" {
           tls_disable = 1
@@ -114,6 +113,10 @@ services:
         }
         enable_response_header_hostname = true
         enable_response_header_raft_node_id = true
+        # To activate request logging, set the log_requests_level configuration option in the
+        # Vault server configuration to the desired logging level.
+        # The acceptable logging levels are error, warn, info, debug, trace, and off,which is the default.
+        log_requests_level = "debug"
       VAULT_STACK_REPLICAS:
     networks:
       vault:
