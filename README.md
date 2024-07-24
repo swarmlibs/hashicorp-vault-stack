@@ -43,6 +43,8 @@ make remove
 > To avoid this, please prepare the `vaule-server.yml` file with the correct node placement constraints before re-deploying the stack.
 > For more information, see the [Docker documentation](https://docs.docker.com/engine/swarm/services/#placement-constraints).
 
+## Configuration
+
 The following environment variables are available for the Docker service, see `.dockerenv` file:
 - `VAULT_STACK_IMAGE=hashicorp/vault`
 - `VAULT_STACK_IMAGE_TAG=latest`
