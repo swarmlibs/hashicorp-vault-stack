@@ -1,13 +1,13 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/swarmlibs/dockerstack-schema/main/schema/dockerstack-spec.json
 
 x-vault-service: &vault-service
-  image: ${DOCKER_SERVICE_VAULT_IMAGE:-hashicorp/vault}:${DOCKER_SERVICE_VAULT_IMAGE_TAG:-latest}
+  image: ${VAULT_STACK_IMAGE:-hashicorp/vault}:${VAULT_STACK_IMAGE_TAG:-latest}
   stop_signal: SIGTERM
   cap_add:
     - IPC_LOCK
 
 x-deploy: &deploy
-  replicas: ${DOCKER_SERVICE_VAULT_REPLICAS:-1}
+  replicas: ${VAULT_STACK_REPLICAS:-1}
   placement:
     max_replicas_per_node: 1
 
@@ -113,7 +113,7 @@ services:
         }
         enable_response_header_hostname = true
         enable_response_header_raft_node_id = true
-      DOCKER_SERVICE_VAULT_REPLICAS:
+      VAULT_STACK_REPLICAS:
     networks:
       vault:
     hostname: replica-{{.Task.Slot}}.vault-internal
@@ -151,5 +151,5 @@ configs:
     name: ${DOCKER_STACK_NAME:-vault}_server_docker_entrypoint_shim_v1
     file: ./server/docker-entrypoint-shim.sh
   vault-server-extraconfig:
-    name: ${DOCKER_STACK_NAME:-vault}_server_extraconfig_${DOCKER_SERVICE_VAULT_EXTRACONFIG_VERSION:-v1}
+    name: ${DOCKER_STACK_NAME:-vault}_server_extraconfig_${VAULT_STACK_EXTRACONFIG_VERSION:-v1}
     file: ./server/extraconfig.hcl

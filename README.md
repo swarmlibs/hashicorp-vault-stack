@@ -31,13 +31,13 @@ make remove
 ```
 
 The following environment variables are available for the Docker service, see `.dockerenv` file:
-- `DOCKER_SERVICE_VAULT_IMAGE=hashicorp/vault`
-- `DOCKER_SERVICE_VAULT_IMAGE_TAG=latest`
-- `DOCKER_SERVICE_VAULT_REPLICAS=1`
-- `DOCKER_SERVICE_VAULT_PUBLISH_PORT=8200`
-- `DOCKER_SERVICE_VAULT_EXTRACONFIG_VERSION=v1`
+- `VAULT_STACK_IMAGE=hashicorp/vault`
+- `VAULT_STACK_IMAGE_TAG=latest`
+- `VAULT_STACK_REPLICAS=1`
+- `VAULT_STACK_PUBLISH_PORT=8200`
+- `VAULT_STACK_EXTRACONFIG_VERSION=v1`
 
-The following environment variables are available for the Vault service, see `.env` file:
+The following environment variables are available for the Vault service:
 - `VAULT_API_ADDR`: The address to bind the API server to.
 - `VAULT_REDIRECT_ADDR`: If not set, the value of `VAULT_API_ADDR` is used.
 - `VAULT_LOG_LEVEL=info`

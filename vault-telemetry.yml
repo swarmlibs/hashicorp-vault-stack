@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/swarmlibs/dockerstack-schema/main/schema/dockerstack-spec.json
 
 x-vault-service: &vault-service
-  image: ${DOCKER_SERVICE_VAULT_IMAGE:-hashicorp/vault}:${DOCKER_SERVICE_VAULT_IMAGE_TAG:-latest}
+  image: ${VAULT_STACK_IMAGE:-hashicorp/vault}:${VAULT_STACK_IMAGE_TAG:-latest}
   stop_signal: SIGTERM
   cap_add:
     - IPC_LOCK
@@ -38,7 +38,7 @@ x-logging: &logging
 
 services:
   telemetry:
-    image: ${DOCKER_SERVICE_VAULT_IMAGE:-hashicorp/vault}:${DOCKER_SERVICE_VAULT_IMAGE_TAG:-latest}
+    <<: vault-service
     command: proxy -config=/vault/config/vault-telemetry.hcl
     networks:
       vault:
@@ -46,9 +46,6 @@ services:
     configs:
       - source: vault-telemetry-config
         target: /vault/config/vault-telemetry.hcl
-    stop_signal: SIGTERM
-    cap_add:
-      - IPC_LOCK
     logging: *logging
     deploy:
       labels:
@@ -57,7 +54,7 @@ services:
         io.prometheus.metrics_path: "/v1/sys/metrics"
         io.prometheus.scrape_port: "8282"
         io.prometheus.param_format: "prometheus"
-      replicas: ${DOCKER_SERVICE_VAULT_REPLICAS:-1}
+      replicas: ${VAULT_STACK_REPLICAS:-1}
       placement:
         max_replicas_per_node: 1
       resources: *resources

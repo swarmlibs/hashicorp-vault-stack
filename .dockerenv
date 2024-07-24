@@ -1,11 +1,15 @@
-# Docker Service variables
-DOCKER_SERVICE_VAULT_IMAGE=hashicorp/vault
-DOCKER_SERVICE_VAULT_IMAGE_TAG=1.17.2
+# Vault deployment
+VAULT_STACK_IMAGE=hashicorp/vault
+VAULT_STACK_IMAGE_TAG=1.17.2
+VAULT_STACK_REPLICAS=1
 
-# Docker config for Vault
-# https://docs.docker.com/engine/swarm/configs/#example-rotate-a-config
-DOCKER_SERVICE_VAULT_REPLICAS=1
-DOCKER_SERVICE_VAULT_EXTRACONFIG_VERSION=v1
+# Vault extra configuration
+VAULT_STACK_EXTRACONFIG_VERSION=v1
 
-# Enable Vault Telemetry
-DOCKER_SERVICE_VAULT_TELEMETRY_ENABLED=false
+# Enable Vault Telemetry (vault-telemetry.yml)
+VAULT_STACK_TELEMETRY_ENABLED=false
+
+# Vault Configuration
+# https://developer.hashicorp.com/vault/docs/configuration
+VAULT_LOG_LEVEL=info
+VAULT_API_ADDR=http://replica-{{.Task.Slot}}.vault-internal:8200
