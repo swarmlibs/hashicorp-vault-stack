@@ -49,9 +49,8 @@ services:
             num_retries = 5
           }
         }
-        api_proxy {
-          // An empty api_proxy stanza still enables the API proxy
-        }
+        // An empty api_proxy stanza still enables the API proxy
+        api_proxy { }
         listener "tcp" {
           address = "0.0.0.0:8282"
           tls_disable = true
