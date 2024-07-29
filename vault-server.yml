@@ -7,7 +7,7 @@ x-vault-service: &vault-service
     - IPC_LOCK
 
 x-deploy: &deploy
-  replicas: ${VAULT_STACK_REPLICAS:-1}
+  replicas: ${VAULT_TASK_REPLICAS:-1}
   placement:
     max_replicas_per_node: 1
 
@@ -81,7 +81,7 @@ services:
         }
         enable_response_header_hostname = true
         enable_response_header_raft_node_id = true
-      VAULT_STACK_REPLICAS:
+      VAULT_TASK_REPLICAS: ${VAULT_TASK_REPLICAS:-1}
     networks:
       vault:
     hostname: replica-{{.Task.Slot}}.vault-internal

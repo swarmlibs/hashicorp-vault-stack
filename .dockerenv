@@ -1,13 +1,13 @@
 # Vault deployment
 VAULT_STACK_IMAGE=hashicorp/vault
 VAULT_STACK_IMAGE_TAG=1.17.2
-VAULT_STACK_REPLICAS=1
 
 # Enable Vault Telemetry (vault-telemetry.yml)
-VAULT_STACK_TELEMETRY_ENABLED=false
-
-# Vault extra configuration
+VAULT_STACK_TELEMETRY_ENABLED=true
 VAULT_STACK_EXTRACONFIG_VERSION=v1
+
+# Docker Service's task replicas
+VAULT_TASK_REPLICAS=1
 
 # Vault Configuration
 # https://developer.hashicorp.com/vault/docs/configuration
