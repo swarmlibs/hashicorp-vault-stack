@@ -45,9 +45,7 @@ services:
         log_level = "info"
         vault {
           address = "http://replica-{{.Task.Slot}}.vault-internal:8282"
-          retry {
-            num_retries = 5
-          }
+          retry { num_retries = 5 }
         }
         // An empty api_proxy stanza still enables the API proxy
         api_proxy { }
