@@ -64,9 +64,7 @@ services:
         io.prometheus.metrics_path: "/v1/sys/metrics"
         io.prometheus.scrape_port: "8282"
         io.prometheus.param_format: "prometheus"
-      replicas: ${VAULT_STACK_REPLICAS:-1}
-      placement:
-        max_replicas_per_node: 1
+      replicas: ${VAULT_TASK_REPLICAS:-1}
       resources: *resources
       restart_policy: *restart_policy
       update_config: *update_config

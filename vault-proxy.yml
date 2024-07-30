@@ -7,9 +7,7 @@ x-vault-service: &vault-service
     - IPC_LOCK
 
 x-deploy: &deploy
-  replicas: ${VAULT_STACK_REPLICAS:-1}
-  placement:
-    max_replicas_per_node: 1
+  replicas: ${VAULT_TASK_REPLICAS:-1}
 
 x-resources: &resources
   reservations:
