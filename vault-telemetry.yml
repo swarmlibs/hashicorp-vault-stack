@@ -56,6 +56,10 @@ services:
     networks:
       vault:
       prometheus:
+    configs:
+      - source: vault-stats-dashboard
+      - source: vault-node-stats-dashboard
+      - source: vault-integrated-storage-raft-dashboard
     logging: *logging
     deploy:
       labels:
@@ -78,3 +82,20 @@ networks:
   prometheus:
     name: prometheus
     external: true
+
+configs:
+  vault-stats-dashboard:
+    name: vault-stats-dashboard-v2
+    file: ./grafana/vault-stats.json
+    labels:
+      - "io.grafana.dashboard=true"
+  vault-node-stats-dashboard:
+    name: vault-node-stats-dashboard-v2
+    file: ./grafana/vault-node-stats.json
+    labels:
+      - "io.grafana.dashboard=true"
+  vault-integrated-storage-raft-dashboard:
+    name: vault-integrated-storage-raft-dashboard-v2
+    file: ./grafana/vault-integrated-storage-raft.json
+    labels:
+      - "io.grafana.dashboard=true"
